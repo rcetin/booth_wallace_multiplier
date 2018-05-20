@@ -25,17 +25,17 @@
 module booth_m_tb;
 
 	// Inputs
-	reg [3:0] x;
-	reg [3:0] y;
+	reg [15:0] x;
+	reg [15:0] y;
 
 	// Outputs
-	wire [7:0] p;
+	wire [31:0] product;
 
 	// Instantiate the Unit Under Test (UUT)
 	booth_m uut (
 		.x(x), 
 		.y(y), 
-		.p(p)
+		.product(product)
 	);
 
 	initial begin
@@ -46,7 +46,7 @@ module booth_m_tb;
 		// Wait 100 ns for global reset to finish
 		#100;
       
-		x = 4'b1000; y = 4'b1100;
+		x = 16'b1101011010110100; y = 16'b1010011010100100;
 		// Add stimulus here
 
 	end
