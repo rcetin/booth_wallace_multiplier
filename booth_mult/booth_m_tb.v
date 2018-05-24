@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+`timescale 1ps / 1fs
 
 ////////////////////////////////////////////////////////////////////////////////
 // Company: 
@@ -39,17 +39,10 @@ module booth_m_tb;
 	);
 
 	initial begin
-		// Initialize Inputs
-		x = 0;
-		y = 0;
-
-		// Wait 100 ns for global reset to finish
-		#100;
+$display($time, " << Starting the Simulation >>");
+#500 x= 16'b1000111010011111; y=16'b1100110001111100; 
+end
       
-		x = 16'b1101011010110100; y = 16'b1010011010100100;
-		// Add stimulus here
-
-	end
-      
+initial
+$monitor("time=%.3f ps, x=%b, y=%b, product=%b\n",$realtime,x,y,product);
 endmodule
-
