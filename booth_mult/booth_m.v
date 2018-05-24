@@ -1,23 +1,8 @@
 `timescale 1ps / 1fs
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    17:07:53 05/19/2018 
-// Design Name: 
-// Module Name:    booth_m 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-//////////////////////////////////////////////////////////////////////////////////
+/*************************************
+ * Designed by: Ramazan Cetin
+ * Company: BOUN
+ *************************************/
 module booth_m(x, y, product);
 parameter group_cnt = 9;
 parameter bit_cnt = 16;
@@ -41,8 +26,7 @@ wire [15:0] fpp8;
 
 
 genvar i, j;
-
-/****** 1. Partial Product Generation ******/
+/******************** Partial Product Generation ********************/
 generate
 	for (j = 0; j < group_cnt; j = j + 1) begin: b_encoder
 		case (j)
@@ -74,11 +58,7 @@ assign fpp6 = {n[6] & (d[6] | s[6]), n[6] & (d[6] | s[6]), n[6] & (d[6] | s[6]),
 assign fpp7 = {n[7] & (d[7] | s[7]), epp2d[7]};
 assign fpp8 = {epp2d[8][15:0]};
 
-//assign product[0] = fpp0[0];
-//assign product[1] = fpp0[1];
-
-/////////////// STAGE 1 ///////////////////
-
+/******************** STAGE 1 ********************/
 wire has00, hac00, has01, hac01, has10, has11, has20, has21, hac10, hac11, hac20, hac21;
 wire [27:0] fas0, fac0;
 wire [21:0] fas1, fac1;
@@ -119,16 +99,14 @@ generate
 endgenerate
 
 assign st00 = {fas0, has01, has00, fpp0[1], fpp0[0]};	// 32 bit
-assign st01 = {fac0[26:0], hac01, hac00};						// 29 bit
-
+assign st01 = {fac0[26:0], hac01, hac00};				// 29 bit
 assign st02 = {fas1, has11, has10, fpp3[1], fpp3[0]};	// 26 bit
-assign st03 = {fac1[20:0], hac11, hac10};						// 23 bit
-
+assign st03 = {fac1[20:0], hac11, hac10};				// 23 bit
 assign st04 = {fas2, has21, has20, fpp6[1], fpp6[0]};	// 20 bit
-assign st05 = {fac2[14:0], hac21, hac20};						// 17 bit
+assign st05 = {fac2[14:0], hac21, hac20};				// 17 bit
 
-/////////////// STAGE 2 ///////////////////
-wire ha1ss00, ha1ss01, ha1ss02, ha1ss03, ha1sc01, ha1sc02, ha1sc03, ha1sc04, ha1ss10, ha1ss11, ha1sc10, ha1sc11;
+/******************** STAGE 2 ********************/
+wire ha1ss00, ha1ss01, ha1ss02, ha1sc01, ha1sc02, ha1ss10, ha1ss11, ha1sc10, ha1sc11;
 wire [25:0] fa1ss0, fa1sc0;
 wire [16:0] fa1ss1, fa1sc1;
 wire [31:0] st10;
@@ -136,7 +114,6 @@ wire [27:0] st11;
 wire [22:0] st12;
 wire [18:0] st13;
 
-//half_adder ha1s0210(.a(st00[2]), .b(st01[0]) , .sum(ha1ss00), .cout(ha1sc01));
 half_adder ha1s0310(.a(st00[3]), .b(st01[0]) , .sum(ha1ss00), .cout(ha1sc00));
 half_adder ha1s0411(.a(st00[4]), .b(st01[1]) , .sum(ha1ss01), .cout(ha1sc01));
 half_adder ha1s0512(.a(st00[5]), .b(st01[2]) , .sum(ha1ss02), .cout(ha1sc02));
@@ -163,8 +140,8 @@ assign st11 = {fa1sc0[24:0], ha1sc02, ha1sc01, ha1sc00};						// 28 bit
 assign st12 = {fa1ss1, ha1ss12, ha1ss11, ha1ss10, st03[2], st03[1], st03[0]};	// 23 bit
 assign st13 = {fa1sc1[15:0], ha1sc12, ha1sc11, ha1sc10};						// 19 bit
 
-/////////////// STAGE 3 ///////////////////
-wire ha2ss00, ha2ss01, ha2ss02, ha2ss03, ha2ss04, ha2ss05, ha2sc01, ha2sc02, ha2sc03, ha2sc04, ha2sc05, ha2sc06;
+/******************** STAGE 3 ********************/
+wire ha2ss00, ha2ss01, ha2ss02, ha2ss03, ha2ss04, ha2sc01, ha2sc02, ha2sc03, ha2sc04;
 wire [22:0] fa2ss0, fa2sc0;
 wire [31:0] st20;
 wire [26:0] st21;
@@ -187,9 +164,9 @@ assign st21 = {fa2sc0[21:0], ha2sc04, ha2sc03, ha2sc02, ha2sc01, ha2sc00};					/
 
 assign st22 = st13;
 
-/////////////// STAGE 4 ///////////////////
-wire ha3ss00, ha3ss01, ha3ss02, ha3ss03, ha3ss04, ha3ss05, ha3ss06, ha3ss07, ha3ss08, ha3ss09;
-wire ha3sc01, ha3sc02, ha3sc03, ha3sc04, ha3sc05, ha3sc06, ha3sc07, ha3sc08, ha3sc09, ha3sc010;
+/******************** STAGE 4 ********************/
+wire ha3ss00, ha3ss01, ha3ss02, ha3ss03, ha3ss04, ha3ss05, ha3ss06, ha3ss07;
+wire ha3sc00, ha3sc01, ha3sc02, ha3sc03, ha3sc04, ha3sc05, ha3sc06, ha3sc07;
 wire [18:0] fa3ss0, fa3sc0;
 wire [31:0] st30;
 wire [25:0] st31;
@@ -212,7 +189,7 @@ endgenerate
 assign st30 = {fa3ss0, ha3ss07, ha3ss06, ha3ss05, ha3ss04, ha3ss03, ha3ss02, ha3ss01, ha3ss00, st20[4], st20[3], st20[2], st20[1], st20[0]};	// 32 bit
 assign st31 = {fa3sc0[17:0], ha3sc07, ha3sc06, ha3sc05, ha3sc04, ha3sc03, ha3sc02, ha3sc01, ha3sc00};					// 26 bit
 
-/////////////// STAGE 5 ///////////////////
+/******************** STAGE 5 ********************/
 wire [25:0] fa4ss0, fa4sc0;
 wire [31:0] st40;
 full_adder fa07(.a(st30[6]), .b(st31[0]), .cin(1'b0), .sum(fa4ss0[0]), .cout(fa4sc0[0]));
@@ -227,7 +204,7 @@ assign st40 = {fa4ss0, st30[5], st30[4], st30[3], st30[2], st30[1], st30[0]};
 assign product = st40;
 endmodule
 
-/* Booth Encoder */
+/******************** Booth Encoder ********************/
 module booth_encoder (x, single, double, neg);
 input [2:0]x;
 output single, double, neg;
@@ -244,19 +221,16 @@ assign #(452.43, 400.56) w1 = notx0 & notx1 & x[2];
 or #(458.88, 449.74) or0(double, w0, w1);
 endmodule
 
+/******************** Booth Selector ********************/
 module booth_selector (double, shifted, single, y, neg, p);
 input double, shifted, single, y, neg;
 output p;
 
 assign #(1125.88, 1235.74) p = (neg ^ ((y & single) | (shifted & double)));
-
 endmodule
 
-////////////////////////////////////
-//4-bit Ripple Carry Adder
-////////////////////////////////////
- 
-module ripple_carry_adder #(parameter width = 4) (a, b, cin, sum, cout);
+/******************** 4-bit Ripple Carry Adder ********************/
+ module ripple_carry_adder #(parameter width = 4) (a, b, cin, sum, cout);
 input [width - 1:0] a,b;
 input cin;
 wire [width -1: 0] c;
@@ -276,9 +250,7 @@ endgenerate
 assign cout = c[width - 1];
 endmodule
  
-//////////////////////////////
-//1bit Full Adder
-/////////////////////////////
+/******************** 1bit Full Adder ********************/
 module full_adder(a,b,cin,sum, cout);
 input a,b,cin;
 output sum, cout;
@@ -288,9 +260,7 @@ half_adder h2(.a(x), .b(cin), .sum(sum), .cout(z));
 or #(458.88, 449.74)or_1(cout,z,y);
 endmodule
  
-///////////////////////////
-// 1 bit Half Adder
-//////////////////////////
+/******************** 1 bit Half Adder ********************/
 module half_adder( a,b, sum, cout );
 input a,b;
 output sum, cout;

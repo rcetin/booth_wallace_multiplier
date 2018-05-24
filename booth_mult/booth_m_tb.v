@@ -1,29 +1,5 @@
 `timescale 1ps / 1fs
-
-////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer:
-//
-// Create Date:   00:15:07 05/20/2018
-// Design Name:   booth_m
-// Module Name:   /home/rcetin/workspace/ISE_workspace/booth_mult/booth_m_tb.v
-// Project Name:  booth_mult
-// Target Device:  
-// Tool versions:  
-// Description: 
-//
-// Verilog Test Fixture created by ISE for module: booth_m
-//
-// Dependencies:
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-////////////////////////////////////////////////////////////////////////////////
-
 module booth_m_tb;
-
 	// Inputs
 	reg [15:0] x;
 	reg [15:0] y;
